@@ -1,0 +1,82 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-spinner/paper-spinner.html">
+
+<dom-module id="oc-organisation-types">
+  <template>
+
+    <iron-ajax
+            auto
+            url="[[ _getOrganisationTypeOptionsUrl() ]]"
+            headers='{"Authorization": "Basic cnVkb2xmQG9yZGVyY2xvdWQuY28uemE6cGFzc3dvcmQ=", "X-Ordercloud-Organisation": "b241bebc36530fe8ebd4a499323e605d"}'
+            handle-as="json"
+            on-response="_handleOrganisationTypeOptionsResponse">
+    </iron-ajax>
+
+    <style>
+      :host {
+        display: block;
+      }
+      paper-checkbox {
+         display:block;
+         margin-top: 1em;
+      }
+    </style>
+
+    <h4>Organisation Types</h4>
+    <paper-spinner active$="[[_loading]]" hidden$="[[!_loading]]"></paper-spinner>
+    <template is="dom-repeat" items="[[ organisationTypeOptions ]]" as="organisationTypeOption">
+      <paper-checkbox on-tap="_organisationTypeSelected" checked="[[ _containsOrganisationType(selectedTypes, organisationTypeOption) ]]">
+        [[ organisationTypeOption.name ]]
+      </paper-checkbox>
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'oc-organisation-types',
+
+      properties: {
+        selectedTypes: [{
+          id: String,
+          name: String
+        }]
+      },
+
+      ready: function() {
+        this._loading = true;
+        this.selectedTypes = this.selectedTypes || [];
+      },
+
+      _getOrganisationTypeOptionsUrl: function() {
+        return "https://test-api.ordercloud.com/resource/organisations/types";
+      },
+
+      _handleOrganisationTypeOptionsResponse: function(event) {
+        this._loading = false;
+        this.organisationTypeOptions = event.detail.response.results;
+      },
+
+      _containsOrganisationType: function(selectedTypes, organisationType) {
+        for(var selectedType in selectedTypes) {
+          if (selectedType.id === organisationType.id) {
+            return true;
+          }
+        }
+        return false;
+      },
+
+      _organisationTypeSelected: function(event) {
+        if (event.currentTarget.checked) {
+          this.selectedTypes.push({ id: event.model.organisationTypeOption.id, name: event.model.organisationTypeOption.name});
+        } else {
+          var removeIndex = this.selectedTypes.map(function(item) { return item.id; }).indexOf(event.model.organisationTypeOption.id);
+          this.selectedTypes.splice(removeIndex, 1);
+        }
+      }
+    });
+  </script>
+</dom-module>
