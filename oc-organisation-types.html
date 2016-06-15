@@ -26,7 +26,7 @@
 
     <h4>Organisation Types</h4>
     <paper-spinner active$="[[_loading]]" hidden$="[[!_loading]]"></paper-spinner>
-    <template is="dom-repeat" items="[[ organisationTypeOptions ]]" as="organisationTypeOption">
+    <template is="dom-repeat" items="[[ _organisationTypeOptions ]]" as="organisationTypeOption">
       <paper-checkbox on-tap="_organisationTypeSelected" checked="[[ _containsOrganisationType(selectedTypes, organisationTypeOption) ]]">
         [[ organisationTypeOption.name ]]
       </paper-checkbox>
@@ -58,16 +58,15 @@
 
       _handleOrganisationTypeOptionsResponse: function(event) {
         this._loading = false;
-        this.organisationTypeOptions = event.detail.response.results;
+        this._organisationTypeOptions = event.detail.response.results.map(function (option) {
+          return {id:option.id, name:option.name};
+        });
       },
 
       _containsOrganisationType: function(selectedTypes, organisationType) {
-        for(var selectedType in selectedTypes) {
-          if (selectedType.id === organisationType.id) {
-            return true;
-          }
-        }
-        return false;
+        return selectedTypes.some(function (item) {
+          return item.id === organisationType.id;
+        });
       },
 
       _organisationTypeSelected: function(event) {
