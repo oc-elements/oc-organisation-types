@@ -40,10 +40,11 @@
       is: 'oc-organisation-types',
 
       properties: {
-        selectedTypes: [{
-          id: String,
-          name: String
-        }]
+        selectedTypes: {
+          type: Array,
+          value: [],
+          notify: true
+        }
       },
 
       ready: function() {
@@ -73,9 +74,13 @@
         if (event.currentTarget.checked) {
           this.selectedTypes.push({ id: event.model.organisationTypeOption.id, name: event.model.organisationTypeOption.name});
         } else {
-          var removeIndex = this.selectedTypes.map(function(item) { return item.id; }).indexOf(event.model.organisationTypeOption.id);
-          this.selectedTypes.splice(removeIndex, 1);
+          this._removeItemById(event.model.organisationTypeOption.id);
         }
+      },
+
+      _removeItemById: function(id) {
+        var removeIndex = this.selectedTypes.map(function(item) { return item.id; }).indexOf(id);
+        this.selectedTypes.splice(removeIndex, 1);
       }
     });
   </script>
