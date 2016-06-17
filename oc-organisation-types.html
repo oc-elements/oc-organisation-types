@@ -2,18 +2,11 @@
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-spinner/paper-spinner.html">
+<link rel="import" href="../oc-organisation-api/oc-organisation-api.html">
+<link rel="import" href="../oc-core-utils/oc-api-consumer-behaviour.html">
 
 <dom-module id="oc-organisation-types">
   <template>
-
-    <iron-ajax
-            auto
-            url="[[ _getOrganisationTypeOptionsUrl() ]]"
-            headers='{"Authorization": "Basic cnVkb2xmQG9yZGVyY2xvdWQuY28uemE6cGFzc3dvcmQ=", "X-Ordercloud-Organisation": "b241bebc36530fe8ebd4a499323e605d"}'
-            handle-as="json"
-            on-response="_handleOrganisationTypeOptionsResponse">
-    </iron-ajax>
-
     <style>
       :host {
         display: block;
@@ -32,12 +25,14 @@
       </paper-checkbox>
     </template>
 
+    <oc-organisation-api id="organisationApi"></oc-organisation-api>
+
   </template>
-
   <script>
+    var OC = window.OC;
     Polymer({
-
       is: 'oc-organisation-types',
+      behaviors: [OC.Behaviours.ApiConsumer],
 
       properties: {
         selectedTypes: {
@@ -50,17 +45,13 @@
       ready: function() {
         this._loading = true;
         this.selectedTypes = this.selectedTypes || [];
-      },
 
-      _getOrganisationTypeOptionsUrl: function() {
-        return "https://test-api.ordercloud.com/resource/organisations/types";
-      },
-
-      _handleOrganisationTypeOptionsResponse: function(event) {
-        this._loading = false;
-        this._organisationTypeOptions = event.detail.response.results.map(function (option) {
-          return {id:option.id, name:option.name};
-        });
+        this.$.organisationApi.getOrganisationTypes()
+                .then(this._setPropertyResponseResults.bind(this, '_organisationTypeOptions'))
+                .catch(function (error) {
+                  this.$.errorMessage.hidden = false;
+                }.bind(this))
+                .finally(this._loading = false);
       },
 
       _containsOrganisationType: function(selectedTypes, organisationType) {
