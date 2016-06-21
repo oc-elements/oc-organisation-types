@@ -7,7 +7,7 @@
     "paper-checkbox": "PolymerElements/paper-checkbox#^1.2.0",
     "iron-ajax": "PolymerElements/iron-ajax#^1.2.0",
     "paper-spinner": "PolymerElements/paper-spinner#^1.2.0",
-    "oc-organisation-api": "^0.1.0"
+    "oc-organisation-api": "^0.2.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
