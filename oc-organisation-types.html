@@ -19,7 +19,7 @@
 
     <h4>Organisation Types</h4>
     <template is="dom-repeat" items="[[ _organisationTypeOptions ]]" as="organisationTypeOption">
-      <paper-checkbox on-tap="_organisationTypeSelected" checked="[[ _containsOrganisationType(selectedTypes, organisationTypeOption) ]]" max-width="200px">
+      <paper-checkbox on-tap="_organisationTypeSelected" checked="[[ _containsOrganisationType(selectedTypes, organisationTypeOption) ]]">
         [[ organisationTypeOption.name ]]
       </paper-checkbox>
     </template>
