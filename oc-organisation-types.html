@@ -18,9 +18,8 @@
     </style>
 
     <h4>Organisation Types</h4>
-    <paper-spinner active$="[[_loading]]" hidden$="[[!_loading]]"></paper-spinner>
     <template is="dom-repeat" items="[[ _organisationTypeOptions ]]" as="organisationTypeOption">
-      <paper-checkbox on-tap="_organisationTypeSelected" checked="[[ _containsOrganisationType(selectedTypes, organisationTypeOption) ]]">
+      <paper-checkbox on-tap="_organisationTypeSelected" checked="[[ _containsOrganisationType(selectedTypes, organisationTypeOption) ]]" max-width="200px">
         [[ organisationTypeOption.name ]]
       </paper-checkbox>
     </template>
